@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">Home Cloud</string>
+
+    <!-- Strings related to Settings -->
+    <string name="pref_header_general">General</string>
+    <string name="pref_general_sync_summary">Used to enable the synchronization</string>
+    <string name="pref_general_sync_title">Synchronize</string>
+    <string name="pref_general_id_anonymous">Anonymous</string>
+    <string name="pref_general_id_summary">Input your user id</string>
+    <string name="pref_general_id_name">User ID</string>
+    <string name="pref_general_ip_summary">The IP o servername of the server</string>
+    <string name="pref_general_ip_name">IP/Servername</string>
+    <string name="pref_general_port_summary">The port where the server is listening</string>
+    <string name="pref_general_about_name">About</string>
+    <string name="pref_general_about_summary">Check this...</string>
+    <string name="pref_general_port_name">Port</string>
+    <string name="pref_sync_list">Sync folder list</string>
+    <string name="pref_file_picker">Sync folder</string>
+    <string name="pref_key_sync">key_sync</string>
+    <string name="pref_key_id">key_id</string>
+    <string name="pref_key_ip">key_ip</string>
+    <string name="pref_key_port">key_port</string>
+    <string name="pref_key_about">key_about</string>
+    <string name="pref_key_sync_list">key_sync_list</string>
+    <string name="about_description">This my home cloud application.</string>
+    <string name="key_file_picker">key_sync_folder</string>
+    <string name="service_sync_name">Synchronization service</string>
+    <string name="notification_title">Home Cloud</string>
+    <string name="notification_text">Synchronizing</string>
+    <string name="notification_sync_completed">Sync completed</string>
+    <string name="notification_error_generic">Synchronization error</string>
+    <string name="notification_error_connection_error">Connection error</string>
+</resources>
