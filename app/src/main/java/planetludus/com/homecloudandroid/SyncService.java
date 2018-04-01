@@ -18,6 +18,7 @@ public class SyncService extends JobService {
     private String ip;
     private String port;
     private String id;
+    private String password;
 
     @Override
     public void onCreate() {
@@ -25,6 +26,7 @@ public class SyncService extends JobService {
         ip = prefs.getString(getString(R.string.pref_key_ip), "127.0.0.1");
         port = prefs.getString(getString(R.string.pref_key_port), "3999");
         id = prefs.getString(getString(R.string.pref_key_id), "anonymous");
+        password = prefs.getString(getString(R.string.pref_key_password), "");
 
         super.onCreate();
     }
@@ -35,7 +37,7 @@ public class SyncService extends JobService {
 
         // send the files in background
         SendFilesTask sendFilesTask = new SendFilesTask(this);
-        sendFilesTask.execute(ip, port, id);
+        sendFilesTask.execute(ip, port, id, password);
 
         jobFinished(jobParameters, true);
         return true;

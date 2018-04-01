@@ -9,13 +9,17 @@ import android.provider.MediaStore;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
+import org.json.JSONException;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ConnectException;
+import java.net.MalformedURLException;
 import java.net.Socket;
 import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
@@ -47,13 +51,14 @@ public class SendFilesTask extends AsyncTask<String, Integer, Boolean> {
      * @param params first param is ip
      *               second param is port
      *               third param is user id
+     *               fourth param is password
      * @return a result, defined by the subclass of this task.
      */
     @Override
     protected Boolean doInBackground(String... params) {
 
         // input parameters
-        if (params == null || params.length != 3) {
+        if (params == null || params.length != 4) {
             Log.e(TAG, "doInBackground: Input param error: "
                     + params == null ? "Null" : String.valueOf(params.length));
             return false;
@@ -62,6 +67,7 @@ public class SendFilesTask extends AsyncTask<String, Integer, Boolean> {
         String ip = params[0];
         String port = params[1];
         String id = params[2];
+        String password = params[3];
 
         // initialize notifications
         NotificationManager mNotifyManager =
@@ -71,25 +77,12 @@ public class SendFilesTask extends AsyncTask<String, Integer, Boolean> {
                 .setContentText(context.getString(R.string.notification_text))
                 .setSmallIcon(R.drawable.ic_info_black_24dp);
 
-         // perform the synchronization
-        Log.d(TAG, "doInBackground: Establishing connection with " + ip + ":" + port);
-        try (Socket socket = new Socket(ip, Integer.valueOf(port));
-             InputStream in = socket.getInputStream();
-             DataInputStream clientData = new DataInputStream(in);
-             OutputStream out = socket.getOutputStream();
-             DataOutputStream serverData = new DataOutputStream(out)) {
+        try {
+            // get token
+            HttpUtils httpUtils = new HttpUtils(ip, port);
+            httpUtils.getToken(id, password);
 
-            Log.d(TAG, "doInBackground: Connection established.");
-
-            Log.d(TAG, "doInBackground: Sending the client id.");
-            serverData.writeUTF(id);
-
-            Log.d(TAG, "doInBackground: Receiving the buffer size");
-            int bufferSize = clientData.readInt();
-
-            // get images, video and audio newer than last sync date
-            Date lastSyncDate = dateFormatter.parse(clientData.readUTF());
-            Log.d(TAG, "doInBackground: Receiving the last sync date: " + lastSyncDate);
+            Date lastSyncDate = new Date();
             List<File> fileList = new ArrayList<>();
             fileList.addAll(getMediaFrom(lastSyncDate, MediaStore.Images.Media.EXTERNAL_CONTENT_URI));
             fileList.addAll(getMediaFrom(lastSyncDate, MediaStore.Video.Media.EXTERNAL_CONTENT_URI));
@@ -100,30 +93,12 @@ public class SendFilesTask extends AsyncTask<String, Integer, Boolean> {
             }
 
             Log.d(TAG, "doInBackground: We are going to send " + fileList.size() + " files.");
-            serverData.writeInt(fileList.size());
 
-            MessageDigest digest = MessageDigest.getInstance("MD5");
             // send all the files
             for (File file : fileList) {
                 Log.d(TAG, "doInBackground: Sending the file: " + file.getName() + " size: " + file.length());
-                serverData.writeUTF(file.getName());
-                serverData.writeLong(file.length());
 
-                byte[] buffer = new byte[bufferSize];
-                try (InputStream inFile = new FileInputStream(file)) {
-                    int numRead;
-                    while ((numRead = inFile.read(buffer)) > 0) {
-                        out.write(buffer, 0, numRead);
-                        digest.update(buffer, 0, numRead);
-                    }
-                    byte [] md5Bytes = digest.digest();
-                    String md5 = convertHashToString(md5Bytes);
-                    Log.d(TAG, "doInBackground: Sending the md5: " + md5);
-                    serverData.writeUTF(md5);
-
-                    // update progress bar
-                    mBuilder.setProgress(fileList.size(), 1, false);
-                }
+                // TODO: parse file to string base64 and send
             }
 
             // removes the progress bar
@@ -134,19 +109,27 @@ public class SendFilesTask extends AsyncTask<String, Integer, Boolean> {
             }
 
             return true;
-        } catch (ConnectException ex) {
-            Log.e(TAG, "ConnectException.", ex);
-            mBuilder.setContentText(context.getString(R.string.notification_error_connection_error))
+
+        } catch (MalformedURLException ex) {
+            Log.e(TAG, "MalformedURLException.", ex);
+            mBuilder.setContentText(context.getString(R.string.notification_error_malformed_url))
                     .setProgress(0, 0, false);
             mNotifyManager.notify(1, mBuilder.build());
             return false;
-        } catch (Exception ex) {
-            Log.e(TAG, "Error communicating with the service", ex);
+        } catch (JSONException ex) {
+            Log.e(TAG, "JSONException.", ex);
             mBuilder.setContentText(context.getString(R.string.notification_error_generic))
                     .setProgress(0, 0, false);
             mNotifyManager.notify(1, mBuilder.build());
             return false;
+        } catch (IOException ex) {
+            Log.e(TAG, "IOException.", ex);
+            mBuilder.setContentText(context.getString(R.string.notification_error_service_error))
+                    .setProgress(0, 0, false);
+            mNotifyManager.notify(1, mBuilder.build());
+            return false;
         }
+
     }
 
     /**
