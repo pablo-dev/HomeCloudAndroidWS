@@ -11,9 +11,11 @@
     <string name="pref_general_ip_summary">The IP o servername of the server</string>
     <string name="pref_general_ip_name">IP/Servername</string>
     <string name="pref_general_port_summary">The port where the server is listening</string>
+    <string name="pref_general_password_summary">The password used in the desktop application</string>
     <string name="pref_general_about_name">About</string>
     <string name="pref_general_about_summary">Check this...</string>
     <string name="pref_general_port_name">Port</string>
+    <string name="pref_general_password_name">Password</string>
     <string name="pref_sync_list">Sync folder list</string>
     <string name="pref_file_picker">Sync folder</string>
     <string name="pref_key_sync">key_sync</string>
@@ -22,6 +24,7 @@
     <string name="pref_key_port">key_port</string>
     <string name="pref_key_about">key_about</string>
     <string name="pref_key_sync_list">key_sync_list</string>
+    <string name="pref_key_password">key_password</string>
     <string name="about_description">This my home cloud application.</string>
     <string name="key_file_picker">key_sync_folder</string>
     <string name="service_sync_name">Synchronization service</string>

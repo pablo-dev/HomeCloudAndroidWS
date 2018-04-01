@@ -37,6 +37,15 @@
             android:singleLine="true"
             android:title="@string/pref_general_port_name" />
 
+        <EditTextPreference
+            android:inputType="textPassword"
+            android:key="@string/pref_key_password"
+            android:maxLines="1"
+            android:maxLength="8"
+            android:summary="@string/pref_general_password_summary"
+            android:singleLine="true"
+            android:title="@string/pref_general_password_name" />
+
         <Preference android:title="@string/pref_general_about_name"
             android:key="@string/pref_key_about"
             android:summary="@string/pref_general_about_summary"/>
