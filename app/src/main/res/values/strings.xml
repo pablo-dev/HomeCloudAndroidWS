@@ -36,4 +36,6 @@
     <string name="notification_error_malformed_url">Error in the URL</string>
     <string name="notification_error_service_error">Communication error with the service</string>
     <string name="notification_error_incorrect_userpass">Incorrect User/pass</string>
+    <string name="notification_error_date_format_error">Date format error</string>
+    <string name="notification_error_undefined_error">Undefined error</string>
 </resources>

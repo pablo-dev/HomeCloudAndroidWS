@@ -22,6 +22,7 @@ import java.net.ConnectException;
 import java.net.MalformedURLException;
 import java.net.Socket;
 import java.security.MessageDigest;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -82,7 +83,8 @@ public class SendFilesTask extends AsyncTask<String, Integer, Boolean> {
             HttpUtils httpUtils = new HttpUtils(ip, port);
             httpUtils.getToken(id, password);
 
-            Date lastSyncDate = new Date();
+            // get last sync
+            Date lastSyncDate = dateFormatter.parse(httpUtils.getLastSync());
             List<File> fileList = new ArrayList<>();
             fileList.addAll(getMediaFrom(lastSyncDate, MediaStore.Images.Media.EXTERNAL_CONTENT_URI));
             fileList.addAll(getMediaFrom(lastSyncDate, MediaStore.Video.Media.EXTERNAL_CONTENT_URI));
@@ -110,32 +112,48 @@ public class SendFilesTask extends AsyncTask<String, Integer, Boolean> {
 
             return true;
 
-        } catch (MalformedURLException ex) {
-            Log.e(TAG, "MalformedURLException.", ex);
-            mBuilder.setContentText(context.getString(R.string.notification_error_malformed_url))
-                    .setProgress(0, 0, false);
-            mNotifyManager.notify(1, mBuilder.build());
-            return false;
-        } catch (JSONException ex) {
-            Log.e(TAG, "JSONException.", ex);
-            mBuilder.setContentText(context.getString(R.string.notification_error_generic))
-                    .setProgress(0, 0, false);
-            mNotifyManager.notify(1, mBuilder.build());
-            return false;
-        } catch (AuthenticationException ex) {
-            Log.e(TAG, "AuthenticationException.", ex);
-            mBuilder.setContentText(context.getString(R.string.notification_error_incorrect_userpass))
+        } catch (MalformedURLException | JSONException | AuthenticationException
+                | ParseException ex) {
+            Log.e(TAG, ex.getClass().toString(), ex);
+            mBuilder.setContentText(getMessageException(ex))
                     .setProgress(0, 0, false);
             mNotifyManager.notify(1, mBuilder.build());
             return false;
         } catch (IOException ex) {
-            Log.e(TAG, "IOException.", ex);
-            mBuilder.setContentText(context.getString(R.string.notification_error_service_error))
+            Log.e(TAG, ex.getClass().toString(), ex);
+            mBuilder.setContentText(getMessageException(ex))
+                    .setProgress(0, 0, false);
+            mNotifyManager.notify(1, mBuilder.build());
+            return false;
+        } catch (Exception ex) {
+            Log.e(TAG, ex.getClass().toString(), ex);
+            mBuilder.setContentText(getMessageException(ex))
                     .setProgress(0, 0, false);
             mNotifyManager.notify(1, mBuilder.build());
             return false;
         }
 
+    }
+
+    /**
+     * Get the appropriate message for each exception type
+     * @param ex
+     * @return
+     */
+    private String getMessageException(Exception ex) {
+        if (ex instanceof MalformedURLException) {
+            return context.getString(R.string.notification_error_malformed_url);
+        } else if (ex instanceof JSONException) {
+            return context.getString(R.string.notification_error_generic);
+        } else if (ex instanceof AuthenticationException) {
+            return context.getString(R.string.notification_error_incorrect_userpass);
+        } else if (ex instanceof ParseException) {
+            return context.getString(R.string.notification_error_date_format_error);
+        } else if (ex instanceof IOException) {
+            return context.getString(R.string.notification_error_service_error);
+        } else {
+            return context.getString(R.string.notification_error_undefined_error);
+        }
     }
 
     /**
