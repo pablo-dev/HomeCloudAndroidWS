@@ -33,6 +33,7 @@
     <string name="notification_sync_completed">Sync completed</string>
     <string name="notification_error_generic">Synchronization error</string>
     <string name="notification_error_connection_error">Connection error</string>
-    <string name="notification_error_malformed_url">Error de formato en la URL</string>
-    <string name="notification_error_service_error">Error en la llamada al servicio (¿Está el servicio instalado correctamente?)</string>
+    <string name="notification_error_malformed_url">Error in the URL</string>
+    <string name="notification_error_service_error">Communication error with the service</string>
+    <string name="notification_error_incorrect_userpass">Incorrect User/pass</string>
 </resources>

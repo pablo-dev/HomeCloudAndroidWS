@@ -122,6 +122,12 @@ public class SendFilesTask extends AsyncTask<String, Integer, Boolean> {
                     .setProgress(0, 0, false);
             mNotifyManager.notify(1, mBuilder.build());
             return false;
+        } catch (AuthenticationException ex) {
+            Log.e(TAG, "AuthenticationException.", ex);
+            mBuilder.setContentText(context.getString(R.string.notification_error_incorrect_userpass))
+                    .setProgress(0, 0, false);
+            mNotifyManager.notify(1, mBuilder.build());
+            return false;
         } catch (IOException ex) {
             Log.e(TAG, "IOException.", ex);
             mBuilder.setContentText(context.getString(R.string.notification_error_service_error))
