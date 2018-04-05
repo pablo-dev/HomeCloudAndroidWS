@@ -143,5 +143,4 @@ public class HttpUtils {
         post(POST_IMAGE_SERVICE, jsonInput, EMPTY_STRING);
     }
 
-    // TODO: implement other methods
 }

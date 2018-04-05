@@ -7,21 +7,15 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.support.v7.app.NotificationCompat;
+import android.util.Base64;
 import android.util.Log;
 
+import org.apache.commons.io.FileUtils;
 import org.json.JSONException;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.ConnectException;
 import java.net.MalformedURLException;
-import java.net.Socket;
-import java.security.MessageDigest;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -100,7 +94,11 @@ public class SendFilesTask extends AsyncTask<String, Integer, Boolean> {
             for (File file : fileList) {
                 Log.d(TAG, "doInBackground: Sending the file: " + file.getName() + " size: " + file.length());
 
-                // TODO: parse file to string base64 and send
+                String fileBase64 = fileToBase64(file);
+                httpUtils.postImage(fileBase64, file.getName());
+
+                // update progress bar
+                mBuilder.setProgress(fileList.size(), 1, false);
             }
 
             // removes the progress bar
@@ -156,18 +154,8 @@ public class SendFilesTask extends AsyncTask<String, Integer, Boolean> {
         }
     }
 
-    /**
-     * Convert md5 hash to string
-     *
-     * @param md5Bytes md5 byte array
-     * @return md5 string
-     */
-    private static String convertHashToString(byte[] md5Bytes) {
-        String returnVal = "";
-        for (int i = 0; i < md5Bytes.length; i++) {
-            returnVal += Integer.toString(( md5Bytes[i] & 0xff ) + 0x100, 16).substring(1);
-        }
-        return returnVal.toUpperCase();
+    private String fileToBase64(File file) throws IOException {
+        return Base64.encodeToString(FileUtils.readFileToByteArray(file), Base64.DEFAULT);
     }
 
     @Override
