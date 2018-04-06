@@ -138,11 +138,13 @@ public class HttpUtils {
      * @throws AuthenticationException
      *          Invalid user pass
      */
-    public void postImage(String imageBase64, String fileName) throws  JSONException, IOException, AuthenticationException {
+    public void postImage(String imageBase64, String fileName, String lastModified)
+            throws  JSONException, IOException, AuthenticationException {
         JSONObject jsonInput = new JSONObject();
         jsonInput.put("imageBase64", imageBase64);
         jsonInput.put("token", this.token);
         jsonInput.put("fileName", fileName);
+        jsonInput.put("lastModified", lastModified);
 
         post(POST_IMAGE_SERVICE, jsonInput, EMPTY_STRING);
     }

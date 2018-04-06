@@ -95,13 +95,12 @@ public class SendFilesTask extends AsyncTask<String, Integer, Boolean> {
                 Log.d(TAG, "doInBackground: Sending the file: " + file.getName() + " size: " + file.length());
 
                 String fileBase64 = fileToBase64(file);
-                httpUtils.postImage(fileBase64, file.getName());
+                Date lastModified = new Date(file.lastModified());
+                httpUtils.postImage(fileBase64, file.getName(), dateFormatter.format(lastModified));
 
                 // update progress bar
                 mBuilder.setProgress(fileList.size(), 1, false);
             }
-
-            httpUtils.updateLastSync();
 
             // removes the progress bar
             if (fileList.size() > 0) {
@@ -185,7 +184,11 @@ public class SendFilesTask extends AsyncTask<String, Integer, Boolean> {
         String[] projection = { MediaStore.MediaColumns.DATA,
                                 MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
                                 MediaStore.Images.Media.DATE_MODIFIED};
-        Cursor cursor = context.getContentResolver().query(uri, projection, null, null, null);
+        Cursor cursor = context.getContentResolver().query(uri,
+                projection,
+                null,
+                null,
+                MediaStore.Images.Media.DATE_MODIFIED);
 
         List<File> fileList = new ArrayList<>();
         int column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
