@@ -101,7 +101,7 @@ public class SendFilesTask extends AsyncTask<String, Integer, Boolean> {
                 mBuilder.setProgress(fileList.size(), 1, false);
             }
 
-            // TODO: call to the new update last sync service
+            httpUtils.updateLastSync();
 
             // removes the progress bar
             if (fileList.size() > 0) {

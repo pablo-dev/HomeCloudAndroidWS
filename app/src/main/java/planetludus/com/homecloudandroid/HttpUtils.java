@@ -16,6 +16,7 @@ public class HttpUtils {
     private static final String LOGIN_SERVICE = "Login";
     private static final String LAST_UPDATE_SERVICE = "LastUpdate";
     private static final String POST_IMAGE_SERVICE = "New";
+    private static final String UPDATE_LAST_SYNC = "UpdateLastSync";
     private static final String HTTP_PROTOCOL = "http://";
     private static final String URL_PATH = "SyncService";
     private static final String EMPTY_STRING = "";
@@ -144,6 +145,13 @@ public class HttpUtils {
         jsonInput.put("fileName", fileName);
 
         post(POST_IMAGE_SERVICE, jsonInput, EMPTY_STRING);
+    }
+
+    public void updateLastSync() throws JSONException, IOException, AuthenticationException {
+        JSONObject jsonInput = new JSONObject();
+        jsonInput.put("token", this.token);
+
+        post(UPDATE_LAST_SYNC, jsonInput, EMPTY_STRING);
     }
 
 }
