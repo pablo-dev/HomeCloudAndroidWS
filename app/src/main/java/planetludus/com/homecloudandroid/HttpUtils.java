@@ -34,12 +34,13 @@ public class HttpUtils {
                 .toString();
     }
 
-    private HttpURLConnection getConnection(String serviceName) throws IOException {
+    private HttpURLConnection getConnection(String serviceName, long size) throws IOException {
         String url = new StringBuilder(baseUrl).append(serviceName).toString();
         HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
         conn.setDoOutput(true);
         conn.setRequestMethod("POST");
         conn.setRequestProperty("Content-Type", "application/json");
+        if (size > 0) conn.setFixedLengthStreamingMode(size);
         return conn;
     }
 
@@ -47,6 +48,7 @@ public class HttpUtils {
         OutputStream os = conn.getOutputStream();
         os.write(jsonInput.toString().getBytes());
         os.flush();
+        os.close();
     }
 
     private JSONObject getOutput(HttpURLConnection conn) throws IOException, JSONException {
@@ -60,10 +62,11 @@ public class HttpUtils {
         return new JSONObject(sb.toString());
     }
 
-    private String post(String serviceName, JSONObject jsonInput, String getParam) throws IOException, JSONException, AuthenticationException {
+    private String post(String serviceName, JSONObject jsonInput, String getParam)
+            throws IOException, JSONException, AuthenticationException {
         HttpURLConnection conn = null;
         try {
-            conn = getConnection(serviceName);
+            conn = getConnection(serviceName, jsonInput.toString().getBytes().length);
             setInput(conn, jsonInput);
 
             if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
