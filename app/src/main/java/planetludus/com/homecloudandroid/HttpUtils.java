@@ -123,7 +123,7 @@ public class HttpUtils {
         JSONObject jsonInput = new JSONObject();
         jsonInput.put("token", this.token);
 
-        return post(LAST_UPDATE_SERVICE, jsonInput, "GetLastUpdateResult");
+        return post(LAST_UPDATE_SERVICE, jsonInput, "GetLastSync");
     }
 
     /**
