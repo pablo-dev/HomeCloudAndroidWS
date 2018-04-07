@@ -38,4 +38,5 @@
     <string name="notification_error_incorrect_userpass">Incorrect User/pass</string>
     <string name="notification_error_date_format_error">Date format error</string>
     <string name="notification_error_undefined_error">Undefined error</string>
+    <string name="notification_error_file_too_big">The file is too big</string>
 </resources>

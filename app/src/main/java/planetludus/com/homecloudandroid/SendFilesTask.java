@@ -83,7 +83,7 @@ public class SendFilesTask extends AsyncTask<String, Integer, Boolean> {
             Date lastSyncDate = dateFormatter.parse(httpUtils.getLastSync());
             List<File> fileList = new ArrayList<>();
             fileList.addAll(getMediaFrom(lastSyncDate, MediaStore.Images.Media.EXTERNAL_CONTENT_URI));
-            fileList.addAll(getMediaFrom(lastSyncDate, MediaStore.Video.Media.EXTERNAL_CONTENT_URI));
+//            fileList.addAll(getMediaFrom(lastSyncDate, MediaStore.Video.Media.EXTERNAL_CONTENT_URI));
             Collections.sort(fileList, new MediaItemComparator());
 
             // update progress bar
@@ -99,7 +99,14 @@ public class SendFilesTask extends AsyncTask<String, Integer, Boolean> {
 
                 String fileBase64 = fileToBase64(file);
                 Date lastModified = new Date(file.lastModified());
-                httpUtils.postImage(fileBase64, file.getName(), dateFormatter.format(lastModified));
+
+                try {
+                    httpUtils.postImage(fileBase64, file.getName(), dateFormatter.format(lastModified));
+                } catch (OutOfMemoryError ex) {
+                    Log.e(TAG, ex.getClass().toString(), ex);
+                    mBuilder.setContentText(context.getString(R.string.notification_error_file_too_big));
+                    mNotifyManager.notify(1, mBuilder.build());
+                }
 
                 // update progress bar
                 mBuilder.setProgress(fileList.size(), 1, false);
