@@ -149,11 +149,4 @@ public class HttpUtils {
         post(POST_IMAGE_SERVICE, jsonInput, EMPTY_STRING);
     }
 
-    public void updateLastSync() throws JSONException, IOException, AuthenticationException {
-        JSONObject jsonInput = new JSONObject();
-        jsonInput.put("token", this.token);
-
-        post(UPDATE_LAST_SYNC, jsonInput, EMPTY_STRING);
-    }
-
 }
