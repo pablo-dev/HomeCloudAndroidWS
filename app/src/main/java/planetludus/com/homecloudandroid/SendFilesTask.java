@@ -19,6 +19,8 @@ import java.net.MalformedURLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -82,7 +84,7 @@ public class SendFilesTask extends AsyncTask<String, Integer, Boolean> {
             List<File> fileList = new ArrayList<>();
             fileList.addAll(getMediaFrom(lastSyncDate, MediaStore.Images.Media.EXTERNAL_CONTENT_URI));
             fileList.addAll(getMediaFrom(lastSyncDate, MediaStore.Video.Media.EXTERNAL_CONTENT_URI));
-            // todo: order the whole file list by file.lastModified
+            Collections.sort(fileList, new MediaItemComparator());
 
             // update progress bar
             if (fileList.size() > 0){
@@ -205,4 +207,17 @@ public class SendFilesTask extends AsyncTask<String, Integer, Boolean> {
         return fileList;
     }
 
+    private class MediaItemComparator implements Comparator<File> {
+
+        @Override
+        public int compare(File lhs, File rhs) {
+            if (lhs.lastModified() == rhs.lastModified()) {
+                return 0;
+            } else if (lhs.lastModified() > rhs.lastModified()) {
+                return 1;
+            } else {
+                return -1;
+            }
+        }
+    }
 }
