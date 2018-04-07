@@ -16,7 +16,6 @@ public class HttpUtils {
     private static final String LOGIN_SERVICE = "Login";
     private static final String LAST_UPDATE_SERVICE = "LastUpdate";
     private static final String POST_IMAGE_SERVICE = "New";
-    private static final String UPDATE_LAST_SYNC = "UpdateLastSync";
     private static final String HTTP_PROTOCOL = "http://";
     private static final String URL_PATH = "SyncService";
     private static final String EMPTY_STRING = "";
@@ -24,7 +23,7 @@ public class HttpUtils {
     private String token;
     private String baseUrl;
 
-    public HttpUtils(String serverName, String port) throws MalformedURLException {
+    public HttpUtils(String serverName, String port) {
         this.baseUrl = new StringBuilder(HTTP_PROTOCOL)
                 .append(serverName)
                 .append(":")
@@ -45,9 +44,9 @@ public class HttpUtils {
         return conn;
     }
 
-    private void setInput(HttpURLConnection conn, JSONObject jsonInput) throws IOException {
+    private void setInput(HttpURLConnection conn, String jsonInput) throws IOException {
         OutputStream os = conn.getOutputStream();
-        os.write(jsonInput.toString().getBytes());
+        os.write(jsonInput.getBytes());
         os.flush();
         os.close();
     }
@@ -63,11 +62,11 @@ public class HttpUtils {
         return new JSONObject(sb.toString());
     }
 
-    private String post(String serviceName, JSONObject jsonInput, String getParam)
+    private String post(String serviceName, String jsonInput, String getParam)
             throws IOException, JSONException, AuthenticationException {
         HttpURLConnection conn = null;
         try {
-            conn = getConnection(serviceName, jsonInput.toString().getBytes().length);
+            conn = getConnection(serviceName, jsonInput.getBytes().length);
             setInput(conn, jsonInput);
 
             if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
@@ -101,11 +100,16 @@ public class HttpUtils {
      *          Invalid user pass
      */
     public void getToken(String userName, String password) throws JSONException, IOException, AuthenticationException {
-        JSONObject jsonInput = new JSONObject();
-        jsonInput.put("userName", userName);
-        jsonInput.put("password", password);
+        StringBuffer jsonInput = new StringBuffer()
+                .append("{")
+                .append("\"userName\":")
+                .append(JSONObject.quote(userName))
+                .append(",")
+                .append("\"password\":")
+                .append(JSONObject.quote(password))
+                .append("}");
 
-        this.token = post(LOGIN_SERVICE, jsonInput, "LoginResult");
+        this.token = post(LOGIN_SERVICE, jsonInput.toString(), "LoginResult");
     }
 
     /**
@@ -120,10 +124,13 @@ public class HttpUtils {
      *          Invalid user pass
      */
     public String getLastSync() throws JSONException, IOException, AuthenticationException {
-        JSONObject jsonInput = new JSONObject();
-        jsonInput.put("token", this.token);
+        StringBuffer jsonInput = new StringBuffer()
+                .append("{")
+                .append("\"token\":")
+                .append(JSONObject.quote(this.token))
+                .append("}");
 
-        return post(LAST_UPDATE_SERVICE, jsonInput, "GetLastSyncResult");
+        return post(LAST_UPDATE_SERVICE, jsonInput.toString(), "GetLastSyncResult");
     }
 
     /**
@@ -131,6 +138,7 @@ public class HttpUtils {
      *
      * @param imageBase64
      * @param fileName
+     * @param lastModified
      * @throws JSONException
      *          Error parsing the json output
      * @throws IOException
@@ -140,13 +148,22 @@ public class HttpUtils {
      */
     public void postImage(String imageBase64, String fileName, String lastModified)
             throws  JSONException, IOException, AuthenticationException {
-        JSONObject jsonInput = new JSONObject();
-        jsonInput.put("imageBase64", imageBase64);
-        jsonInput.put("token", this.token);
-        jsonInput.put("fileName", fileName);
-        jsonInput.put("lastModified", lastModified);
+        StringBuilder jsonInput = new StringBuilder()
+                .append("{")
+                .append("\"imageBase64\":")
+                .append(JSONObject.quote(imageBase64))
+                .append(",")
+                .append("\"token\":")
+                .append(JSONObject.quote(this.token))
+                .append(",")
+                .append("\"fileName\":")
+                .append(JSONObject.quote(fileName))
+                .append(",")
+                .append("\"lastModified\":")
+                .append(JSONObject.quote(lastModified))
+                .append("}");
 
-        post(POST_IMAGE_SERVICE, jsonInput, EMPTY_STRING);
+        post(POST_IMAGE_SERVICE, jsonInput.toString(), EMPTY_STRING);
     }
 
 }

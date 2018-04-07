@@ -82,6 +82,7 @@ public class SendFilesTask extends AsyncTask<String, Integer, Boolean> {
             List<File> fileList = new ArrayList<>();
             fileList.addAll(getMediaFrom(lastSyncDate, MediaStore.Images.Media.EXTERNAL_CONTENT_URI));
             fileList.addAll(getMediaFrom(lastSyncDate, MediaStore.Video.Media.EXTERNAL_CONTENT_URI));
+            // todo: order the whole file list by file.lastModified
 
             // update progress bar
             if (fileList.size() > 0){
