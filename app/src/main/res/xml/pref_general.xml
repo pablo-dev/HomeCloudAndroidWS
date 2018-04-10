@@ -50,5 +50,18 @@
             android:key="@string/pref_key_about"
             android:summary="@string/pref_general_about_summary"/>
     </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/pref_header_advance"
+        android:key="pref_advance">
+
+        <ListPreference
+            android:key="@string/pref_key_buffer"
+            android:title="@string/pref_advance_buffer_name"
+            android:dialogTitle="@string/pref_advance_buffer_name"
+            android:entries="@array/pref_advance_buffer_entries"
+            android:entryValues="@array/pref_advance_buffer_values"
+            android:defaultValue="@string/pref_advance_buffer_default"
+            />
+    </PreferenceCategory>
 
 </PreferenceScreen>

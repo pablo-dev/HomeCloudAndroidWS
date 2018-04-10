@@ -49,13 +49,14 @@ public class SendFilesTask extends AsyncTask<String, Integer, Boolean> {
      *               second param is port
      *               third param is user id
      *               fourth param is password
+     *               fifth param is the buffer size
      * @return a result, defined by the subclass of this task.
      */
     @Override
     protected Boolean doInBackground(String... params) {
 
         // input parameters
-        if (params == null || params.length != 4) {
+        if (params == null || params.length != 5) {
             Log.e(TAG, "doInBackground: Input param error: "
                     + params == null ? "Null" : String.valueOf(params.length));
             return false;
@@ -65,6 +66,7 @@ public class SendFilesTask extends AsyncTask<String, Integer, Boolean> {
         String port = params[1];
         String id = params[2];
         String password = params[3];
+        int bufferSize = Integer.parseInt(params[4]);
 
         // initialize notifications
         NotificationManager mNotifyManager =
@@ -76,14 +78,14 @@ public class SendFilesTask extends AsyncTask<String, Integer, Boolean> {
 
         try {
             // get token
-            HttpUtils httpUtils = new HttpUtils(ip, port);
+            HttpUtils httpUtils = new HttpUtils(ip, port, bufferSize);
             httpUtils.getToken(id, password);
 
             // get last sync
             Date lastSyncDate = dateFormatter.parse(httpUtils.getLastSync());
             List<File> fileList = new ArrayList<>();
             fileList.addAll(getMediaFrom(lastSyncDate, MediaStore.Images.Media.EXTERNAL_CONTENT_URI));
-//            fileList.addAll(getMediaFrom(lastSyncDate, MediaStore.Video.Media.EXTERNAL_CONTENT_URI));
+            fileList.addAll(getMediaFrom(lastSyncDate, MediaStore.Video.Media.EXTERNAL_CONTENT_URI));
             Collections.sort(fileList, new MediaItemComparator());
 
             // update progress bar

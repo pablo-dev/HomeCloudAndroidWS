@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Random;
 
 public class HttpUtils {
 
@@ -21,8 +22,10 @@ public class HttpUtils {
 
     private String token;
     private String baseUrl;
+    private int bufferSize;
 
-    public HttpUtils(String serverName, String port) {
+    public HttpUtils(String serverName, String port, int bufferSize) {
+        this.bufferSize = bufferSize;
         this.baseUrl = new StringBuilder(HTTP_PROTOCOL)
                 .append(serverName)
                 .append(":")
@@ -147,22 +150,50 @@ public class HttpUtils {
      */
     public void postImage(String imageBase64, String fileName, String lastModified)
             throws  JSONException, IOException, AuthenticationException {
-        StringBuilder jsonInput = new StringBuilder()
-                .append("{")
-                .append("\"imageBase64\":")
-                .append(JSONObject.quote(imageBase64))
-                .append(",")
-                .append("\"token\":")
-                .append(JSONObject.quote(this.token))
-                .append(",")
-                .append("\"fileName\":")
-                .append(JSONObject.quote(fileName))
-                .append(",")
-                .append("\"lastModified\":")
-                .append(JSONObject.quote(lastModified))
-                .append("}");
 
-        post(POST_IMAGE_SERVICE, jsonInput.toString(), EMPTY_STRING);
+        String chunk;
+        String idPart = EMPTY_STRING;
+        for (int i = 0; i <= imageBase64.length() / this.bufferSize; i++) {
+            int min = i * this.bufferSize;
+            int max = (i * this.bufferSize + this.bufferSize) > imageBase64.length() ?
+                    imageBase64.length() : (i * this.bufferSize + this.bufferSize);
+            chunk = imageBase64.substring(min, max);
+
+            if (i == imageBase64.length() / this.bufferSize && EMPTY_STRING.equals(idPart)) {
+                idPart = EMPTY_STRING;
+            } else {
+                idPart = EMPTY_STRING.equals(idPart) ? generatePartId(20) : idPart;
+            }
+
+            StringBuilder jsonInput = new StringBuilder()
+                    .append("{")
+                    .append("\"imageBase64\":")
+                    .append(JSONObject.quote(chunk))
+                    .append(",")
+                    .append("\"token\":")
+                    .append(JSONObject.quote(this.token))
+                    .append(",")
+                    .append("\"fileName\":")
+                    .append(JSONObject.quote(fileName))
+                    .append(",")
+                    .append("\"lastModified\":")
+                    .append(JSONObject.quote(lastModified))
+                    .append(",")
+                    .append("\"idPart\":")
+                    .append(JSONObject.quote(lastModified))
+                    .append("}");
+
+            post(POST_IMAGE_SERVICE, jsonInput.toString(), EMPTY_STRING);
+        }
+
     }
 
+    private String generatePartId(int length) {
+        String result = "";
+        Random r = new Random();
+        for (int i = 0; i < length; i++) {
+            result += r.nextInt(10);
+        }
+        return result;
+    }
 }

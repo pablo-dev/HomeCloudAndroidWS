@@ -3,6 +3,7 @@
 
     <!-- Strings related to Settings -->
     <string name="pref_header_general">General</string>
+    <string name="pref_header_advance">Advanced</string>
     <string name="pref_general_sync_summary">Used to enable the synchronization</string>
     <string name="pref_general_sync_title">Synchronize</string>
     <string name="pref_general_id_anonymous">Anonymous</string>
@@ -16,6 +17,10 @@
     <string name="pref_general_about_summary">Check this...</string>
     <string name="pref_general_port_name">Port</string>
     <string name="pref_general_password_name">Password</string>
+    <string name="pref_advance_buffer_size">Buffer size</string>
+    <string name="pref_advance_buffer_summary">Big files will be sent in chunks of this buffer size</string>
+    <string name="pref_advance_buffer_name">Buffer size</string>
+    <string name="pref_advance_buffer_default">2000</string>
     <string name="pref_sync_list">Sync folder list</string>
     <string name="pref_file_picker">Sync folder</string>
     <string name="pref_key_sync">key_sync</string>
@@ -25,6 +30,7 @@
     <string name="pref_key_about">key_about</string>
     <string name="pref_key_sync_list">key_sync_list</string>
     <string name="pref_key_password">key_password</string>
+    <string name="pref_key_buffer">key_buffer</string>
     <string name="about_description">This my home cloud application.</string>
     <string name="key_file_picker">key_sync_folder</string>
     <string name="service_sync_name">Synchronization service</string>
@@ -38,5 +44,5 @@
     <string name="notification_error_incorrect_userpass">Incorrect User/pass</string>
     <string name="notification_error_date_format_error">Date format error</string>
     <string name="notification_error_undefined_error">Undefined error</string>
-    <string name="notification_error_file_too_big">The file is too big</string>
+    <string name="notification_error_file_too_big">Reduce the buffer size</string>
 </resources>
