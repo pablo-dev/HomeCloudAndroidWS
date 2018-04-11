@@ -38,7 +38,6 @@ public class SendFilesTask extends AsyncTask<String, Integer, Boolean> {
 
     private final static String TAG = "SendFilesTask";
     private final static SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    private static final int BUFFER_SIZE = 10 * 1024;
 
     private Context context;
 
@@ -95,7 +94,7 @@ public class SendFilesTask extends AsyncTask<String, Integer, Boolean> {
 
             // update progress bar
             if (fileList.size() > 0){
-                mBuilder.setProgress(fileList.size(), 0, false);
+                mBuilder.setProgress(fileList.size(), 0, true);
             }
 
             Log.d(TAG, "doInBackground: We are going to send " + fileList.size() + " files.");
@@ -115,7 +114,7 @@ public class SendFilesTask extends AsyncTask<String, Integer, Boolean> {
                 }
 
                 // update progress bar
-                mBuilder.setProgress(fileList.size(), 1, false);
+                mBuilder.setProgress(fileList.size(), 1, true);
             }
 
             Log.d(TAG, "doInBackground: All the files sent");
