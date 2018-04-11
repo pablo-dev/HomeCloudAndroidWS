@@ -153,13 +153,22 @@ public class HttpUtils {
 
         String chunk;
         String idPart = EMPTY_STRING;
-        for (int i = 0; i <= imageBase64.length() / this.bufferSize; i++) {
-            int min = i * this.bufferSize;
-            int max = (i * this.bufferSize + this.bufferSize) > imageBase64.length() ?
-                    imageBase64.length() : (i * this.bufferSize + this.bufferSize);
-            chunk = imageBase64.substring(min, max);
+        int chunkNumber = imageBase64.length() / this.bufferSize;
+        int maxIter = imageBase64.length() % this.bufferSize == 0 || imageBase64.length() <= this.bufferSize
+                ? chunkNumber : chunkNumber + 1;
+        for (int i = 0; i <= maxIter; i++) {
+            // calculate chunk
+            if (i < (imageBase64.length() / this.bufferSize) + 1) {
+                int min = i * this.bufferSize;
+                int max = (i * this.bufferSize + this.bufferSize) > imageBase64.length() ?
+                        imageBase64.length() : (i * this.bufferSize + this.bufferSize);
+                chunk = imageBase64.substring(min, max);
+            } else {
+                chunk = EMPTY_STRING;
+            }
 
-            if (i == imageBase64.length() / this.bufferSize && EMPTY_STRING.equals(idPart)) {
+            // calculate idPart
+            if (i >= imageBase64.length() / this.bufferSize && EMPTY_STRING.equals(idPart)) {
                 idPart = EMPTY_STRING;
             } else {
                 idPart = EMPTY_STRING.equals(idPart) ? generatePartId(20) : idPart;
