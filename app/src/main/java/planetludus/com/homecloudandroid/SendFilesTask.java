@@ -13,12 +13,16 @@ import android.util.Log;
 import org.apache.commons.io.FileUtils;
 import org.json.JSONException;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.MalformedURLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -34,6 +38,7 @@ public class SendFilesTask extends AsyncTask<String, Integer, Boolean> {
 
     private final static String TAG = "SendFilesTask";
     private final static SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private static final int BUFFER_SIZE = 10 * 1024;
 
     private Context context;
 
@@ -99,11 +104,10 @@ public class SendFilesTask extends AsyncTask<String, Integer, Boolean> {
             for (File file : fileList) {
                 Log.d(TAG, "doInBackground: Sending the file: " + file.getName() + " size: " + file.length());
 
-                String fileBase64 = fileToBase64(file);
                 Date lastModified = new Date(file.lastModified());
 
                 try {
-                    httpUtils.postImage(fileBase64, file.getName(), dateFormatter.format(lastModified));
+                    httpUtils.postImage(file, file.getName(), dateFormatter.format(lastModified));
                 } catch (OutOfMemoryError ex) {
                     Log.e(TAG, ex.getClass().toString(), ex);
                     mBuilder.setContentText(context.getString(R.string.notification_error_file_too_big));
@@ -114,6 +118,7 @@ public class SendFilesTask extends AsyncTask<String, Integer, Boolean> {
                 mBuilder.setProgress(fileList.size(), 1, false);
             }
 
+            Log.d(TAG, "doInBackground: All the files sent");
             // removes the progress bar
             if (fileList.size() > 0) {
                 mBuilder.setContentText(context.getString(R.string.notification_sync_completed))
@@ -165,10 +170,6 @@ public class SendFilesTask extends AsyncTask<String, Integer, Boolean> {
         } else {
             return context.getString(R.string.notification_error_undefined_error);
         }
-    }
-
-    private String fileToBase64(File file) throws IOException {
-        return Base64.encodeToString(FileUtils.readFileToByteArray(file), Base64.DEFAULT);
     }
 
     @Override

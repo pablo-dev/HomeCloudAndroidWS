@@ -20,7 +20,7 @@
     <string name="pref_advance_buffer_size">Buffer size</string>
     <string name="pref_advance_buffer_summary">Big files will be sent in chunks of this buffer size</string>
     <string name="pref_advance_buffer_name">Buffer size</string>
-    <string name="pref_advance_buffer_default">2000</string>
+    <string name="pref_advance_buffer_default">12288000</string>
     <string name="pref_sync_list">Sync folder list</string>
     <string name="pref_file_picker">Sync folder</string>
     <string name="pref_key_sync">key_sync</string>
@@ -38,6 +38,7 @@
     <string name="notification_text">Synchronizing</string>
     <string name="notification_sync_completed">Sync completed</string>
     <string name="notification_error_generic">Synchronization error</string>
+    <string name="notification_error_connect">Network is unreachable</string>
     <string name="notification_error_connection_error">Connection error</string>
     <string name="notification_error_malformed_url">Error in the URL</string>
     <string name="notification_error_service_error">Communication error with the service</string>

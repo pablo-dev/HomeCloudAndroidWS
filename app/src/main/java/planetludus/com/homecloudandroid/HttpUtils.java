@@ -1,14 +1,20 @@
 package planetludus.com.homecloudandroid;
 
+import android.util.Base64;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Random;
 
 public class HttpUtils {
@@ -19,6 +25,7 @@ public class HttpUtils {
     private static final String HTTP_PROTOCOL = "http://";
     private static final String URL_PATH = "SyncService";
     private static final String EMPTY_STRING = "";
+    private static final int BASE_64_FLAGS = Base64.DEFAULT;
 
     private String token;
     private String baseUrl;
@@ -137,8 +144,9 @@ public class HttpUtils {
 
     /**
      * Post the base64 image with the given fileName
+     * This buffer size should be divisible by three see (https://stackoverflow.com/a/39099064/3790546)
      *
-     * @param imageBase64
+     * @param file
      * @param fileName
      * @param lastModified
      * @throws JSONException
@@ -148,53 +156,32 @@ public class HttpUtils {
      * @throws AuthenticationException
      *          Invalid user pass
      */
-    public void postImage(String imageBase64, String fileName, String lastModified)
+    public void postImage(File file, String fileName, String lastModified)
             throws  JSONException, IOException, AuthenticationException {
 
-        String chunk;
-        String idPart = EMPTY_STRING;
-        int chunkNumber = imageBase64.length() / this.bufferSize;
-        int maxIter = imageBase64.length() % this.bufferSize == 0 || imageBase64.length() <= this.bufferSize
-                ? chunkNumber : chunkNumber + 1;
-        for (int i = 0; i <= maxIter; i++) {
-            // calculate chunk
-            if (i < (imageBase64.length() / this.bufferSize) + 1) {
-                int min = i * this.bufferSize;
-                int max = (i * this.bufferSize + this.bufferSize) > imageBase64.length() ?
-                        imageBase64.length() : (i * this.bufferSize + this.bufferSize);
-                chunk = imageBase64.substring(min, max);
-            } else {
-                chunk = EMPTY_STRING;
+        try (BufferedInputStream in = new BufferedInputStream(new FileInputStream(file), this.bufferSize)) {
+            byte[] chunk = new byte[this.bufferSize];
+            int len;
+            String idPart = file.length() > this.bufferSize ? generatePartId(20) : EMPTY_STRING;
+            while ((len = in.read(chunk)) == this.bufferSize) {
+                String jsonInput =
+                        postImageJson(Base64.encodeToString(chunk, BASE_64_FLAGS), fileName, lastModified, idPart);
+                post(POST_IMAGE_SERVICE, jsonInput, EMPTY_STRING);
             }
+            if (len > 0) {
+                String jsonInput =
+                        postImageJson(Base64.encodeToString(Arrays.copyOf(chunk, len), BASE_64_FLAGS), fileName, lastModified, EMPTY_STRING);
+                post(POST_IMAGE_SERVICE, jsonInput, EMPTY_STRING);
 
-            // calculate idPart
-            if (i >= imageBase64.length() / this.bufferSize && EMPTY_STRING.equals(idPart)) {
-                idPart = EMPTY_STRING;
-            } else {
-                idPart = EMPTY_STRING.equals(idPart) ? generatePartId(20) : idPart;
+                if (! EMPTY_STRING.equals(idPart)) {
+                    jsonInput =
+                            postImageJson(EMPTY_STRING, fileName, lastModified, idPart);
+                    post(POST_IMAGE_SERVICE, jsonInput, EMPTY_STRING);
+                }
             }
-
-            StringBuilder jsonInput = new StringBuilder()
-                    .append("{")
-                    .append("\"imageBase64\":")
-                    .append(JSONObject.quote(chunk))
-                    .append(",")
-                    .append("\"token\":")
-                    .append(JSONObject.quote(this.token))
-                    .append(",")
-                    .append("\"fileName\":")
-                    .append(JSONObject.quote(fileName))
-                    .append(",")
-                    .append("\"lastModified\":")
-                    .append(JSONObject.quote(lastModified))
-                    .append(",")
-                    .append("\"idPart\":")
-                    .append(JSONObject.quote(lastModified))
-                    .append("}");
-
-            post(POST_IMAGE_SERVICE, jsonInput.toString(), EMPTY_STRING);
+        } catch (Exception ex) {
+            throw ex;
         }
-
     }
 
     private String generatePartId(int length) {
@@ -204,5 +191,27 @@ public class HttpUtils {
             result += r.nextInt(10);
         }
         return result;
+    }
+
+    private String postImageJson(String chunk, String fileName, String lastModified, String idPart) {
+        StringBuilder jsonInput = new StringBuilder()
+                .append("{")
+                .append("\"imageBase64\":")
+                .append(JSONObject.quote(chunk))
+                .append(",")
+                .append("\"token\":")
+                .append(JSONObject.quote(this.token))
+                .append(",")
+                .append("\"fileName\":")
+                .append(JSONObject.quote(fileName))
+                .append(",")
+                .append("\"lastModified\":")
+                .append(JSONObject.quote(lastModified))
+                .append(",")
+                .append("\"idPart\":")
+                .append(JSONObject.quote(idPart))
+                .append("}");
+
+        return jsonInput.toString();
     }
 }
