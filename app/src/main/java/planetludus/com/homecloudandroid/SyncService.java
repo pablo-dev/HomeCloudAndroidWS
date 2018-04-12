@@ -27,7 +27,7 @@ public class SyncService extends JobService {
         ip = prefs.getString(getString(R.string.pref_key_ip), "127.0.0.1");
         port = prefs.getString(getString(R.string.pref_key_port), "3999");
         id = prefs.getString(getString(R.string.pref_key_id), "anonymous");
-        password = prefs.getString(getString(R.string.pref_key_password), getString(R.string.pref_advance_buffer_default));
+        password = prefs.getString(getString(R.string.pref_advance_buffer_default), "12288000");
         bufferSize = prefs.getString(getString(R.string.pref_key_buffer), "3000");
 
         super.onCreate();
