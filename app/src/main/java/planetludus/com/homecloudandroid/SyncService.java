@@ -37,6 +37,12 @@ public class SyncService extends JobService {
     public boolean onStartJob(JobParameters jobParameters) {
         Log.d(TAG, "onStartJob");
 
+        // check the sync is active
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        if (! prefs.getBoolean(getString(R.string.pref_key_sync), false)) {
+            return false;
+        }
+
         // send the files in background
         SendFilesTask sendFilesTask = new SendFilesTask(this);
         sendFilesTask.execute(ip, port, id, password, bufferSize);
