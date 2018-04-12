@@ -159,23 +159,26 @@ public class HttpUtils {
     public void postImage(File file, String fileName, String lastModified)
             throws  JSONException, IOException, AuthenticationException {
 
+        String folderName = file.getParentFile() != null ? file.getParentFile().getName() : EMPTY_STRING;
         try (BufferedInputStream in = new BufferedInputStream(new FileInputStream(file), this.bufferSize)) {
             byte[] chunk = new byte[this.bufferSize];
             int len;
             String idPart = file.length() > this.bufferSize ? generatePartId(20) : EMPTY_STRING;
             while ((len = in.read(chunk)) == this.bufferSize) {
                 String jsonInput =
-                        postImageJson(Base64.encodeToString(chunk, BASE_64_FLAGS), fileName, lastModified, idPart);
+                        postImageJson(Base64.encodeToString(chunk, BASE_64_FLAGS), fileName,
+                                folderName, lastModified, idPart);
                 post(POST_IMAGE_SERVICE, jsonInput, EMPTY_STRING);
             }
             if (len > 0) {
                 String jsonInput =
-                        postImageJson(Base64.encodeToString(Arrays.copyOf(chunk, len), BASE_64_FLAGS), fileName, lastModified, EMPTY_STRING);
+                        postImageJson(Base64.encodeToString(Arrays.copyOf(chunk, len), BASE_64_FLAGS),
+                                fileName, folderName, lastModified, EMPTY_STRING);
                 post(POST_IMAGE_SERVICE, jsonInput, EMPTY_STRING);
 
                 if (! EMPTY_STRING.equals(idPart)) {
                     jsonInput =
-                            postImageJson(EMPTY_STRING, fileName, lastModified, idPart);
+                            postImageJson(EMPTY_STRING, fileName, folderName, lastModified, idPart);
                     post(POST_IMAGE_SERVICE, jsonInput, EMPTY_STRING);
                 }
             }
@@ -193,7 +196,8 @@ public class HttpUtils {
         return result;
     }
 
-    private String postImageJson(String chunk, String fileName, String lastModified, String idPart) {
+    private String postImageJson(String chunk, String fileName, String folderName, String lastModified
+            , String idPart) {
         StringBuilder jsonInput = new StringBuilder()
                 .append("{")
                 .append("\"imageBase64\":")
@@ -204,6 +208,9 @@ public class HttpUtils {
                 .append(",")
                 .append("\"fileName\":")
                 .append(JSONObject.quote(fileName))
+                .append(",")
+                .append("\"folderName\":")
+                .append(JSONObject.quote(folderName))
                 .append(",")
                 .append("\"lastModified\":")
                 .append(JSONObject.quote(lastModified))
