@@ -26,6 +26,7 @@ public class HttpUtils {
     private static final String URL_PATH = "SyncService";
     private static final String EMPTY_STRING = "";
     private static final int BASE_64_FLAGS = Base64.DEFAULT;
+    private static final int RETRIES = 3;
 
     private String token;
     private String baseUrl;
@@ -96,6 +97,23 @@ public class HttpUtils {
         }
     }
 
+    private String postRetries(String serviceName, String jsonInput, String getParam, int maxRetries)
+            throws IOException, JSONException, AuthenticationException {
+        int retries = 0;
+        IOException ioException = new IOException();
+        while (retries < maxRetries) {
+            try {
+                return post(serviceName, jsonInput, getParam);
+            } catch (IOException ex) {
+                retries++;
+                ioException = ex;
+            } catch (JSONException | AuthenticationException ex) {
+                throw ex;
+            }
+        }
+        throw ioException;
+    }
+
     /**
      * Login and get token to be used in the further calls
      *
@@ -118,7 +136,7 @@ public class HttpUtils {
                 .append(JSONObject.quote(password))
                 .append("}");
 
-        this.token = post(LOGIN_SERVICE, jsonInput.toString(), "LoginResult");
+        this.token = postRetries(LOGIN_SERVICE, jsonInput.toString(), "LoginResult", RETRIES);
     }
 
     /**
@@ -139,7 +157,8 @@ public class HttpUtils {
                 .append(JSONObject.quote(this.token))
                 .append("}");
 
-        return post(LAST_UPDATE_SERVICE, jsonInput.toString(), "GetLastSyncResult");
+        return postRetries(LAST_UPDATE_SERVICE, jsonInput.toString(),
+                "GetLastSyncResult", RETRIES);
     }
 
     /**
@@ -168,18 +187,18 @@ public class HttpUtils {
                 String jsonInput =
                         postImageJson(Base64.encodeToString(chunk, BASE_64_FLAGS), fileName,
                                 folderName, lastModified, idPart);
-                post(POST_IMAGE_SERVICE, jsonInput, EMPTY_STRING);
+                postRetries(POST_IMAGE_SERVICE, jsonInput, EMPTY_STRING, RETRIES);
             }
             if (len > 0) {
                 String jsonInput =
                         postImageJson(Base64.encodeToString(Arrays.copyOf(chunk, len), BASE_64_FLAGS),
                                 fileName, folderName, lastModified, EMPTY_STRING);
-                post(POST_IMAGE_SERVICE, jsonInput, EMPTY_STRING);
+                postRetries(POST_IMAGE_SERVICE, jsonInput, EMPTY_STRING, RETRIES);
 
                 if (! EMPTY_STRING.equals(idPart)) {
                     jsonInput =
                             postImageJson(EMPTY_STRING, fileName, folderName, lastModified, idPart);
-                    post(POST_IMAGE_SERVICE, jsonInput, EMPTY_STRING);
+                    postRetries(POST_IMAGE_SERVICE, jsonInput, EMPTY_STRING, RETRIES);
                 }
             }
         } catch (Exception ex) {
