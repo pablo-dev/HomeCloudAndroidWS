@@ -87,7 +87,7 @@ public class SendFilesTask extends AsyncTask<String, Integer, Boolean> {
             Collections.sort(fileList, new MediaItemComparator());
 
             // update progress bar
-            if (fileList.size() > 0){
+            if (fileList.size() > 0) {
                 mBuilder.setProgress(fileList.size(), 0, true);
             }
 
