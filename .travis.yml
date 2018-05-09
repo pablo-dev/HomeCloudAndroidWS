@@ -1,17 +1,24 @@
+sudo: false
 language: android
+jdk: oraclejdk8
 android:
   components:
-    - build-tools-27.0.3
-    - android-27
-    - extra
-
+  - build-tools-27.0.3
+  - android-27
+  - extra
+notifications:
+  email: true
 before_install:
   - yes | sdkmanager "platforms;android-23"
-
 deploy:
-  provider: pages
-  skip-cleanup: true
-  github-token: $GITHUB_TOKEN
-  keep-history: true
+  provider: releases
+  api_key:
+    secure: X7POt1oc4VeEHk+pNfl0DDDy1+rkle5EZs0d4V34rFOlbTyHsu3G0fDG3RqHokm0pk6xdlyvPwyV1BkUchlssbtcV2GAu4iYrvZomLfhow9NUmEOYaiWrX7p86VP2dwokp6tJaOkca6NrTifAQSbr3jEutdlVK3Sl14+MVGH8rCVlBy69Cw6nPUsN3MeR083q5HCTtZrwq+K4HUxfRtLbxdAf8DZW1kAQ9q6T3LHEuuuNwCcD+Cg0jIX3ymDC8Ei9lRmKpRHaBtwt264IdTjXrPX50ssHRSqF4ZpSSMbpyFjTut4VnuT3/9vzK5P267L3sQmmBhCP+ihAeTjm/E8FJxn9n8nfCrOoK5rv4yxyWP8n1RGz1ikHAbEzkaef0HVN5F5Vs97APZhyOhKQzeXb1xHRhCHlavnRkJZ2SQ2f6CiAnY5mxusErpCzu4mis35A2G1SyEiGQYz5MEWmFbO8uipQHMMBOwBlqssfz0BVC9Y/SRnd4nTPaGRcVE2tp1w6EZclGot/7x77y+amC1e49qaTVsGQs4+y55NBfYeEWoZgKiHJ+V1pN4WkmnU8488o2DeowbDjeJSC2Hu3SgapmqHYVrD4WMcVOsXCoZ46F8I6V5WdQDka+6rJYWZzJj4q8Fe/GWz6g+IYjsp7e5GLOMx/u21N9y9lXC4Nh1cf70=
+  file: build/outputs/apk/release/HomeCloud*release*.apk
+  file_glob: "true"
+  skip_cleanup: true
   on:
     branch: master
+    repo: pablo-dev/HomeCloudAndroidWS
+after_success:
+- sh set_tags.sh
