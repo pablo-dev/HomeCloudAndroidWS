@@ -10,6 +10,13 @@ notifications:
   email: true
 before_install:
   - yes | sdkmanager "platforms;android-23"
+before_cache:
+ -rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+ -rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+cache:
+ directories:
+ -$HOME/.gradle/caches/
+ -$HOME/.gradle/wrapper/
 deploy:
   provider: releases
   api_key:
