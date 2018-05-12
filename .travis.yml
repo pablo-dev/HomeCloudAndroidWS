@@ -12,8 +12,9 @@ notifications:
   email: true
 
 env:
-  secure: "FwFQokgY6Ygz0MGqHEqOn9+HmlGeM+kPkVVSA03fTcGGZGhmNQyr0TyBGcGxU+1tAh4jS2tDM/OkkBP4ERcjJ1tBYjT2OX6gGM/N7mWm8mEUc0X/fyD6XvY78Yr+LueDfR0+8uoNuMSrNpEv8DQqHKbT7P5NbQlvMH5sc2FN+osk+PQUb07tU/ir4CFC/loTbKeBs95ZnccAH7iu2b9fqo96WExvkNpxTYZROlbt4rlByuyu1TJcrixspRd1nDX063LW1FF64NS84gpvbnjDl+jcq2AuupU9deuF3vwxqC5esKATk+WZUEL0HhvyBPE4CqbWlDVRYKBDdb3BiSc4utP2BuGK9PSOZweHQry3la967HwVETFpF+ZVJfZDeo/tH6A04ZqjzUCl6pAqpydNxUPZAgzJYiGlFp4VCyTWGNbnQpzlNI0n/plQ0YjgSCBjg5HiaydJCmmJqsJInNsyaRUpwkfkdtQUoPJCMxlO1boptpkdiHHnTfJwhg44L7qk5hK+SbzK3S20DGEjrgQONBMlboNOx8U+1Xjr9xkLcygXdxz12nT/tdtVncTIHCaHv2IYRZELficgK9kENqcq2ssciqzFdzzkPYHg8jf8RoxnAKJXkolVa/gISOt8zK6Yyzgq0Ntf6sg3HrVixv61xQ/zwok8ZgFgKWOPLpNUCBs="
-  secure: "payCma9ChqzAo+gHzPHmqRorZypQjjvmrbhB0P5TvBypSbKjEpnl5asA0QVD0sqneHCmzHrb1Nd/tg5KCOFeSml6EFiVTM8ZzXd1nJ6l1iyFP3o8z5baKEra+RNdQdokrdxk8otz7RjBIBtIxqEVufwT3co5dH9ctd85eJXEiXbJ52Nd+gruOQIr4mlWgI3PgSpIPcE4MQaYCTyv6UShP/0jOFWJJy3ppHpSJORaj3amwdzKlqFLIiGeNnmCu44HOSL2Ls+aKcrRlJii4bkZaR4AxLKmSMcOJVt8kvU+JUcWTfMzdERUkg05SO0dMwlCO8gGk19jl6GJFJeoHx/0hi5SxX7FRSCEl2LcdKjDiGLFc6KoXZuT6pm+HGxYVBanF/aEDqMsPGVMIzqBFk7pt4cbzoJuSaZKIv+0r6kjqaktmd45Il3lCpVuKop13fPYCjmwXKRPVrQlYa4aV+mhe9SzjQP0VfaRFMnrYeDHUEhoUeeijq/9RUpbhfYAcXTI2h/UXGLOP6n62MfelbjpjozHLqAgb8IU+NVm1rhfooy3ByylG5BE+ZEv61+y7LJEcU28Pd1v1J4MJUrMLvQZRssaDc85RbYPzh+AFA13fwd3dsDG8HikTL+TUN+zgFcpCqfRwcJwiQoNvLAx4RETXT5UDvAOwm2W4UFVCNEzfWk="
+  global:
+  - secure: "uANLNxMW8F+EMwYKoqdslChfH2sQtpnQyl3kuNjsX6HJtGpsoKA1s4KP26w7DYlfM/l/UiZxuEmyxagRJoB0qGtTbO7m1W3lGf8OuXU1LSrMZfBvuzlqbEr9eqbP4lJzve3xv+sfWpCgYYZWeUt84RqkbuujPC9jHGwqSOzBcWpLjDBr/CkwO/ZeArtgi0jb3TciFGXS0CPWkNFXAJiABx4spYRU5eCraROPzVhLg/KLd53XONDdREzug9OQuCIKPKbd+qUnayFcao9HV+jH4RFSiz09W0ydhBxZkuMYawpAB2jNPvby0V3JYivVxJH8kdEQUqUG3Sj6vDZCdrHL73eEZcnXSeQrWofkNwp5mJ3ES9zMrcK72Q/zW8eXFdazsIKZGvt12bw57SplnUz1557vYywB4rgXFWBqPVK7chprW2vdMw4bFXCkqejwI/YB3eqSC9L3cSnlzAsFcntK1TDcMzelBwcf8KPDYHFNqwS8uPj8VIFYkYN91JMfjIFVVUoa/NJ9xnKHsZAE5o+HNjpFQcHatnJKqlRcmxXVEG2JAFlAcr+toKVhcm4UdfIv9f21W/r8hlh3zpWF3PH2D9qTMpENQMmKwRVavv4Net+xBDN7oie7MiFnCsI+wtIzbcj70gMFVFaas37VVWpcp4TyLHRaZvTMd4H2ciDyzaM="
+  - secure: "Ios6osi8Th4Jo5jpbZt/qnrp3Koo6saLItFjKEGgqdZn3ThpEJ+uhu24Tc1zwY8ZbNRAL8pbL89wQHf6kriM925cFFbFHChU/N6RaadT/eRMoBGIeBpqaVnoyn83tr6GrtLG6GuuHQnZu9Q8+SSGsMkEEWWZWl/8znF5A5cyGzfLpoh8wF4xhSh0Mj+gCoGH9Z+XP4NgB0juNlJRdjjD4igWvcNpaI41dCVQxE3hAhpShsiYs0z9xaTqWwpMlD6Y3epdVRzd7QeLYKgm5aCCFOJ/vwYtZiLbGDS//QUme1wSNbnUArz/IV4X3eJtG4ngBdvU/FDuzHTvApbY2LZSlEjRgdeW0TuzBKo/wdAT2Dvs9Yiz29dUv6o3aYqG1rlA5trT3NRW2kB1b9jV0cY+tTeH6wVleJlcRypLGg29usdqM8l+FUWzg7GtRVn+Uu3w4+5P9/eV+Yvr+fzHvQGZkNRzAxKOmqBwNP/dZhLjBSPQQ7P/JeMeVmaqAgF1GusA4puRqLgnhIu7DD94tvpQY/ydSGotqLX+kcQ2f2mUIs7vk6MgZTS/rjr8/9BPDyh93eLORDo5WUHZHgwR3/RFk/cTnMabYmFuu7aPwvdQMX3Ai2dcU7gB5zia41Uc3HgIWV74+g1oPeVPyB4sw3Ehdn2ytKPb6P7NuGxd0Od/3ZI="
 
 before_install:
   - yes | sdkmanager "platforms;android-23"
@@ -29,24 +30,25 @@ cache:
  - $HOME/.gradle/wrapper/
 
 before_deploy:
-  - cp $TRAVIS_BUILD_DIR/.keystore $HOME
+  - cp $TRAVIS_BUILD_DIR/android_ks.jks $HOME
   - cd HomeCloud/build/outputs/apk/release/
-  - jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore $HOME/keystore.jks -storepass $storepass -keypass $keypass HomeCloud-release-unsigned.apk android_ks
+  - jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore "${HOME}/android_ks.jks" -storepass ${storepass} -keypass ${keypass} HomeCloud-release-unsigned.apk homecloudws
 
 # Verification
   - jarsigner -verify HomeCloud-release-unsigned.apk
   - "${ANDROID_HOME}/build-tools/27.0.3/zipalign -v 4 HomeCloud-release-unsigned.apk HomeCloudWS.apk"
+
+# Set up git user name and tag this commit
+  - git config --local user.name "pablo-dev"
+  - git config --local user.email "pablo.carnero.linan@gmail.com"
+  - git tag "$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)"
 
 deploy:
   provider: releases
   api_key:
     secure: X7POt1oc4VeEHk+pNfl0DDDy1+rkle5EZs0d4V34rFOlbTyHsu3G0fDG3RqHokm0pk6xdlyvPwyV1BkUchlssbtcV2GAu4iYrvZomLfhow9NUmEOYaiWrX7p86VP2dwokp6tJaOkca6NrTifAQSbr3jEutdlVK3Sl14+MVGH8rCVlBy69Cw6nPUsN3MeR083q5HCTtZrwq+K4HUxfRtLbxdAf8DZW1kAQ9q6T3LHEuuuNwCcD+Cg0jIX3ymDC8Ei9lRmKpRHaBtwt264IdTjXrPX50ssHRSqF4ZpSSMbpyFjTut4VnuT3/9vzK5P267L3sQmmBhCP+ihAeTjm/E8FJxn9n8nfCrOoK5rv4yxyWP8n1RGz1ikHAbEzkaef0HVN5F5Vs97APZhyOhKQzeXb1xHRhCHlavnRkJZ2SQ2f6CiAnY5mxusErpCzu4mis35A2G1SyEiGQYz5MEWmFbO8uipQHMMBOwBlqssfz0BVC9Y/SRnd4nTPaGRcVE2tp1w6EZclGot/7x77y+amC1e49qaTVsGQs4+y55NBfYeEWoZgKiHJ+V1pN4WkmnU8488o2DeowbDjeJSC2Hu3SgapmqHYVrD4WMcVOsXCoZ46F8I6V5WdQDka+6rJYWZzJj4q8Fe/GWz6g+IYjsp7e5GLOMx/u21N9y9lXC4Nh1cf70=
   file: HomeCloud/build/outputs/apk/release/HomeCloudWS.apk
-  file_glob: "true"
   skip_cleanup: true
   on:
     branch: master
     repo: pablo-dev/HomeCloudAndroidWS
-
-after_success:
-  - sh set_tags.sh
