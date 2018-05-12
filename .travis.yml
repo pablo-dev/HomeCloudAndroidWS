@@ -1,26 +1,33 @@
 sudo: false
 language: android
 jdk: oraclejdk8
+
 android:
   components:
   - build-tools-27.0.3
   - android-27
   - extra
+
 notifications:
   email: true
+
 env:
   secure: "FwFQokgY6Ygz0MGqHEqOn9+HmlGeM+kPkVVSA03fTcGGZGhmNQyr0TyBGcGxU+1tAh4jS2tDM/OkkBP4ERcjJ1tBYjT2OX6gGM/N7mWm8mEUc0X/fyD6XvY78Yr+LueDfR0+8uoNuMSrNpEv8DQqHKbT7P5NbQlvMH5sc2FN+osk+PQUb07tU/ir4CFC/loTbKeBs95ZnccAH7iu2b9fqo96WExvkNpxTYZROlbt4rlByuyu1TJcrixspRd1nDX063LW1FF64NS84gpvbnjDl+jcq2AuupU9deuF3vwxqC5esKATk+WZUEL0HhvyBPE4CqbWlDVRYKBDdb3BiSc4utP2BuGK9PSOZweHQry3la967HwVETFpF+ZVJfZDeo/tH6A04ZqjzUCl6pAqpydNxUPZAgzJYiGlFp4VCyTWGNbnQpzlNI0n/plQ0YjgSCBjg5HiaydJCmmJqsJInNsyaRUpwkfkdtQUoPJCMxlO1boptpkdiHHnTfJwhg44L7qk5hK+SbzK3S20DGEjrgQONBMlboNOx8U+1Xjr9xkLcygXdxz12nT/tdtVncTIHCaHv2IYRZELficgK9kENqcq2ssciqzFdzzkPYHg8jf8RoxnAKJXkolVa/gISOt8zK6Yyzgq0Ntf6sg3HrVixv61xQ/zwok8ZgFgKWOPLpNUCBs="
   secure: "payCma9ChqzAo+gHzPHmqRorZypQjjvmrbhB0P5TvBypSbKjEpnl5asA0QVD0sqneHCmzHrb1Nd/tg5KCOFeSml6EFiVTM8ZzXd1nJ6l1iyFP3o8z5baKEra+RNdQdokrdxk8otz7RjBIBtIxqEVufwT3co5dH9ctd85eJXEiXbJ52Nd+gruOQIr4mlWgI3PgSpIPcE4MQaYCTyv6UShP/0jOFWJJy3ppHpSJORaj3amwdzKlqFLIiGeNnmCu44HOSL2Ls+aKcrRlJii4bkZaR4AxLKmSMcOJVt8kvU+JUcWTfMzdERUkg05SO0dMwlCO8gGk19jl6GJFJeoHx/0hi5SxX7FRSCEl2LcdKjDiGLFc6KoXZuT6pm+HGxYVBanF/aEDqMsPGVMIzqBFk7pt4cbzoJuSaZKIv+0r6kjqaktmd45Il3lCpVuKop13fPYCjmwXKRPVrQlYa4aV+mhe9SzjQP0VfaRFMnrYeDHUEhoUeeijq/9RUpbhfYAcXTI2h/UXGLOP6n62MfelbjpjozHLqAgb8IU+NVm1rhfooy3ByylG5BE+ZEv61+y7LJEcU28Pd1v1J4MJUrMLvQZRssaDc85RbYPzh+AFA13fwd3dsDG8HikTL+TUN+zgFcpCqfRwcJwiQoNvLAx4RETXT5UDvAOwm2W4UFVCNEzfWk="
+
 before_install:
   - yes | sdkmanager "platforms;android-23"
   - openssl aes-256-cbc -K $encrypted_72ad576912f2_key -iv $encrypted_72ad576912f2_iv -in android_ks.jks.enc -out android_ks.jks -d
+
 before_cache:
  -rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
  -rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+
 cache:
  directories:
  -$HOME/.gradle/caches/
  -$HOME/.gradle/wrapper/
+
 before_deploy:
 - cp $TRAVIS_BUILD_DIR/.keystore $HOME
 - cd HomeCloud/build/outputs/apk/release/
@@ -29,6 +36,7 @@ before_deploy:
 # Verification
 - jarsigner -verify HomeCloud-release-unsigned.apk
 - "${ANDROID_HOME}/build-tools/27.0.3/zipalign -v 4 HomeCloud-release-unsigned.apk HomeCloudWS.apk"
+
 deploy:
   provider: releases
   api_key:
@@ -39,5 +47,6 @@ deploy:
   on:
     branch: master
     repo: pablo-dev/HomeCloudAndroidWS
+
 after_success:
 - sh set_tags.sh
