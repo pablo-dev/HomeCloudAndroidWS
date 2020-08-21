@@ -18,7 +18,6 @@ import android.support.v4.content.ContextCompat;
  */
 public class Preferences extends Activity {
 
-    private final static String TAG = "Preferences";
     private final static int MY_READ_EXTERNAL_STORAGE = 1;
 
     @Override
