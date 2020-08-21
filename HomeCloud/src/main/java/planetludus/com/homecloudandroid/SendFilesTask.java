@@ -6,7 +6,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
-import android.support.v7.app.NotificationCompat;
+
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import org.json.JSONException;
